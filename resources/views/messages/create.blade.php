@@ -11,22 +11,27 @@
                 <form action="{{ route('messages.store') }}" method="POST">
                     @csrf
 
+                    <x-validation-errors class="mb-4" />
+
                     <div class="mb-4">
                         <x-label class="mb-1">Asunto</x-label>
-                        <x-input type="text" class="w-full" name="subject"
+                        <x-input type="text" class="w-full" name="subject" value="{{ old('subject') }}"
                             placeholder="Escriba el asunto del mensaje" />
                     </div>
 
                     <div class="mb-4">
                         <x-label class="mb-1">Mensaje</x-label>
-                        <textarea class="form-control w-full" name="body" placeholder="Escriba su mensaje"></textarea>
+                        <textarea class="form-control w-full" name="body" placeholder="Escriba su mensaje">{{ old('body') }}</textarea>
                     </div>
 
                     <div class="mb-4">
                         <x-label class="mb-1">Destinatario</x-label>
                         <select name="recipient_user_id" class="form-control w-full">
+                            <option value="">Seleccionar destinatario</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                <option @selected(old('recipient_user_id') == $user->id) value="{{ $user->id }}">
+                                    {{ $user->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

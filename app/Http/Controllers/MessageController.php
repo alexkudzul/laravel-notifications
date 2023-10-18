@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,18 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
-        return $request->all();
+        $data = $request->validate([
+            'subject' => 'required',
+            'body' => 'required',
+            'recipient_user_id' => 'required|exists:users,id',
+        ]);
+
+        $data['sender_user_id'] = auth()->user()->id;
+
+        Message::create($data);
+
+        session()->flash('flash.banner', '¡Mensaje enviado!');
+
+        return to_route('messages.create');
     }
 }
