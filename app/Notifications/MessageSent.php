@@ -2,10 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
 class MessageSent extends Notification implements ShouldQueue
 {
@@ -24,12 +25,14 @@ class MessageSent extends Notification implements ShouldQueue
      * php artisan queue:work
      */
 
+    public $data;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -47,8 +50,13 @@ class MessageSent extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $senderUser = User::find($this->data['sender_user_id']);
+
         return (new MailMessage)
-            ->line('The introduction to the notification.')
+            ->greeting('Titulo Mensaje')
+            ->line("{$senderUser->name} Te ha enviado un mensaje.")
+            ->line($this->data['body'])
+            ->lineIf(true, 'Este es un mensaje de prueba desde un lineIf.')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }
