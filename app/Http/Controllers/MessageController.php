@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Message;
 use App\Models\User;
+use App\Models\Message;
 use Illuminate\Http\Request;
+use App\Notifications\MessageSent;
+use Illuminate\Support\Facades\Notification;
 
 class MessageController extends Controller
 {
@@ -26,6 +28,11 @@ class MessageController extends Controller
         $data['sender_user_id'] = auth()->user()->id;
 
         Message::create($data);
+
+        $recipientUser = User::find($data['recipient_user_id']);
+
+        $recipientUser->notify(new MessageSent()); // Enviar solo a un usuario especifico
+        // Notification::send($recipientUser, new MessageSent()); // Enviar a todos los usuarios ejemplo: User::all() o $users
 
         session()->flash('flash.banner', '¡Mensaje enviado!');
 
