@@ -7,9 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MessageSent extends Notification
+class MessageSent extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    /**
+     * ShouldQueue: permite poner en cola las notificaciones.
+     *
+     * Si se utiliza la opcion de database en la configuración del servidor.
+     * QUEUE_CONNECTION=database
+     *
+     * Es necesario agregar la migración de las notificaciones a la BD.
+     * php artisan queue:table
+     *
+     * Para hacer pruebas en local ejecutar el siguiente comando:
+     * php artisan queue:work
+     */
 
     /**
      * Create a new notification instance.
