@@ -31,8 +31,11 @@ class MessageController extends Controller
 
         $recipientUser = User::find($data['recipient_user_id']);
 
+        $delay = now()->addSeconds(10);
+
         $recipientUser->notify(new MessageSent()); // Enviar solo a un usuario especifico
         // Notification::send($recipientUser, new MessageSent()); // Enviar a todos los usuarios ejemplo: User::all() o $users
+        // $recipientUser->notify((new MessageSent())->delay($delay)); // Retrasar el envío por 10 segundos.
 
         session()->flash('flash.banner', '¡Mensaje enviado!');
 
