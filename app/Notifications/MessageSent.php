@@ -57,7 +57,7 @@ class MessageSent extends Notification implements ShouldQueue
             ->line("{$senderUser->name} Te ha enviado un mensaje.")
             ->line($this->data['body'])
             ->lineIf(true, 'Este es un mensaje de prueba desde un lineIf.')
-            ->action('Notification Action', url('/'))
+            ->action('Ver mensaje', url('/dashboard'))
             ->line('Thank you for using our application!');
     }
 
