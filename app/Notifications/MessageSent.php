@@ -25,6 +25,17 @@ class MessageSent extends Notification implements ShouldQueue
      * php artisan queue:work
      */
 
+    /**
+     * Personalizando las plantillas y componentes.
+     *
+     * https://laravel.com/docs/10.x/notifications#customizing-the-templates
+     * https://laravel.com/docs/10.x/notifications#customizing-the-components
+     *
+     * Se tendra que publicar las vistas con los siguiente comandos:
+     * php artisan vendor:publish --tag=laravel-notifications
+     * php artisan vendor:publish --tag=laravel-mail
+     */
+
     public $data;
 
     /**
