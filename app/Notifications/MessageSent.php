@@ -63,16 +63,25 @@ class MessageSent extends Notification implements ShouldQueue
     {
         $senderUser = User::find($this->data['sender_user_id']);
 
+        // return (new MailMessage)
+        //     ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
+        //     ->error() // Estilo de mensaje, pinta en color rojo del boton y cambia el contenido de los textos si que no esta agregado.
+        //     ->subject($this->data['subject'])
+        //     ->greeting('Titulo Mensaje')
+        //     ->line("{$senderUser->name} Te ha enviado un mensaje.")
+        //     ->line($this->data['body'])
+        //     ->lineIf(true, 'Este es un mensaje de prueba desde un lineIf.')
+        //     ->action('Ver mensaje', url('/dashboard'))
+        //     ->line('Thank you for using our application!');
+
+        // Uso de Markdown en las notificaciones, permite tener las vistas mas personalizadas y agregar logica.
         return (new MailMessage)
             ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
-            ->error() // Estilo de mensaje, pinta en color rojo del boton y cambia el contenido de los textos si que no esta agregado.
             ->subject($this->data['subject'])
-            ->greeting('Titulo Mensaje')
-            ->line("{$senderUser->name} Te ha enviado un mensaje.")
-            ->line($this->data['body'])
-            ->lineIf(true, 'Este es un mensaje de prueba desde un lineIf.')
-            ->action('Ver mensaje', url('/dashboard'))
-            ->line('Thank you for using our application!');
+            ->markdown('mail.message-sent', [
+                'senderUser' => $senderUser,
+                'body' => $this->data['body'],
+            ]);
     }
 
     /**
