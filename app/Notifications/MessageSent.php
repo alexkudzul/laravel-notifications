@@ -53,6 +53,7 @@ class MessageSent extends Notification implements ShouldQueue
         $senderUser = User::find($this->data['sender_user_id']);
 
         return (new MailMessage)
+            ->error() // Estilo de mensaje, pinta en color rojo del boton y cambia el contenido de los textos si que no esta agregado.
             ->greeting('Titulo Mensaje')
             ->line("{$senderUser->name} Te ha enviado un mensaje.")
             ->line($this->data['body'])
