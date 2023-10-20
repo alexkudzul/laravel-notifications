@@ -82,6 +82,15 @@ class MessageSent extends Notification implements ShouldQueue
                 'senderUser' => $senderUser,
                 'body' => $this->data['body'],
             ]);
+
+        /* Uso de view en las notificaciones, funciona igual que el uso de Markdown,
+         con la diferencia que se usara una vista blade y no por componentes.
+         Se puede agregar html y css o algun framework de css. */
+
+        // ->view('mail.message-sent', [
+        //     'senderUser' => $senderUser,
+        //     'body' => $this->data['body'],
+        // ]);
     }
 
     /**
