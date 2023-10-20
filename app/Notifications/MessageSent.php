@@ -78,6 +78,10 @@ class MessageSent extends Notification implements ShouldQueue
         return (new MailMessage)
             ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
             ->subject($this->data['subject'])
+            ->attach(public_path('img/alpine.webp'), [
+                'as' => 'alpine-image.webp',
+                'mime' => 'image/webp',
+            ])
             ->markdown('mail.message-sent', [
                 'senderUser' => $senderUser,
                 'body' => $this->data['body'],
