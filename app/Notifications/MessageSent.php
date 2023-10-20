@@ -53,6 +53,7 @@ class MessageSent extends Notification implements ShouldQueue
         $senderUser = User::find($this->data['sender_user_id']);
 
         return (new MailMessage)
+            ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
             ->error() // Estilo de mensaje, pinta en color rojo del boton y cambia el contenido de los textos si que no esta agregado.
             ->subject($this->data['subject'])
             ->greeting('Titulo Mensaje')
