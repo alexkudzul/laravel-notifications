@@ -36,6 +36,14 @@ class MessageSent extends Notification implements ShouldQueue
      * php artisan vendor:publish --tag=laravel-mail
      */
 
+    /**
+     * Canal database
+     *
+     * Para usar el canal de base de datos se tiene que agregar la
+     * migración de las notificaciones a la BD, con el siguiente comando:
+     * php artisan notifications:table
+     */
+
     public $data;
 
     /**
