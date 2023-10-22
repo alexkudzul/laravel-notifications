@@ -6,6 +6,16 @@ use Livewire\Component;
 
 class Notifications extends Component
 {
+    public $amountNotificationsToShow = 3;
+
+    /**
+     * Computed Property
+     */
+    public function getNotificationsProperty()
+    {
+        return auth()->user()->notifications->take($this->amountNotificationsToShow);
+    }
+
     /**
      * Mark notifications as read
      */
@@ -21,6 +31,11 @@ class Notifications extends Component
     {
         auth()->user()->notification = 0;
         auth()->user()->save();
+    }
+
+    public function incrementAmountNotificationsToShow()
+    {
+        $this->amountNotificationsToShow += 3;
     }
 
     public function render()

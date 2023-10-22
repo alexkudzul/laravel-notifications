@@ -16,23 +16,35 @@
         </x-slot>
 
         <x-slot name="content">
-            <ul class="divide-y">
-                @forelse (auth()->user()->notifications as $notification)
-                    <li wire:click="readNotification('{{ $notification->id }}')" @class(['bg-gray-200' => !$notification->read_at])>
-                        <x-dropdown-link href="{{ $notification->data['url'] }}">
-                            {{ $notification->data['message'] }}
-                            <br>
-                            <span class="text-xs font-semibold">
-                                {{ $notification->created_at->diffForHumans() }}
-                            </span>
-                        </x-dropdown-link>
-                    </li>
-                @empty
-                    <li class="px-4 py-2">
+            <div class="max-h-[calc(100vh-8rem)] overflow-auto">
+                @if ($this->notifications->count())
+                    <ul class="divide-y">
+                        @foreach ($this->notifications as $notification)
+                            <li wire:click="readNotification('{{ $notification->id }}')" @class(['bg-gray-200' => !$notification->read_at])>
+                                <x-dropdown-link href="{{ $notification->data['url'] }}">
+                                    {{ $notification->data['message'] }}
+                                    <br>
+                                    <span class="text-xs font-semibold">
+                                        {{ $notification->created_at->diffForHumans() }}
+                                    </span>
+                                </x-dropdown-link>
+                            </li>
+                        @endforeach
+                    </ul>
+                    @if (auth()->user()->notifications->count() > $amountNotificationsToShow)
+                        <div class="flex justify-center px-4 pt-2 pb-1">
+                            <button wire:click="incrementAmountNotificationsToShow"
+                                class="text-sm text-blue-500 font-semibold">
+                                Ver mas notificaciones
+                            </button>
+                        </div>
+                    @endif
+                @else
+                    <div class="px-4 py-2">
                         No tienes notificaciones
-                    </li>
-                @endforelse
-            </ul>
+                    </div>
+                @endif
+            </div>
         </x-slot>
     </x-dropdown>
 </div>
