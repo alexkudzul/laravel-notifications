@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\User;
+use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,14 +45,14 @@ class MessageSent extends Notification implements ShouldQueue
      * php artisan notifications:table
      */
 
-    public $data;
+    public $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($data)
+    public function __construct(Message $message)
     {
-        $this->data = $data;
+        $this->message = $message;
     }
 
     /**
@@ -61,7 +62,7 @@ class MessageSent extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -69,15 +70,15 @@ class MessageSent extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $senderUser = User::find($this->data['sender_user_id']);
+        $senderUser = User::find($this->message->sender_user_id);
 
         // return (new MailMessage)
         //     ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
         //     ->error() // Estilo de mensaje, pinta en color rojo del boton y cambia el contenido de los textos si que no esta agregado.
-        //     ->subject($this->data['subject'])
+        //     ->subject($this->message->subject)
         //     ->greeting('Titulo Mensaje')
         //     ->line("{$senderUser->name} Te ha enviado un mensaje.")
-        //     ->line($this->data['body'])
+        //     ->line($this->message->body)
         //     ->lineIf(true, 'Este es un mensaje de prueba desde un lineIf.')
         //     ->action('Ver mensaje', url('/dashboard'))
         //     ->line('Thank you for using our application!');
@@ -85,14 +86,14 @@ class MessageSent extends Notification implements ShouldQueue
         // Uso de Markdown en las notificaciones, permite tener las vistas mas personalizadas y agregar logica.
         return (new MailMessage)
             ->from('no-reply@example.com', 'Alex Ku Dzul') // Correo del remitente (sender)
-            ->subject($this->data['subject'])
+            ->subject($this->message->subject)
             ->attach(public_path('img/alpine.webp'), [
                 'as' => 'alpine-image.webp',
                 'mime' => 'image/webp',
             ])
             ->markdown('mail.message-sent', [
                 'senderUser' => $senderUser,
-                'body' => $this->data['body'],
+                'body' => $this->message->body,
             ]);
 
         /* Uso de view en las notificaciones, funciona igual que el uso de Markdown,
@@ -101,8 +102,21 @@ class MessageSent extends Notification implements ShouldQueue
 
         // ->view('mail.message-sent', [
         //     'senderUser' => $senderUser,
-        //     'body' => $this->data['body'],
+        //     'body' => $this->message->body,
         // ]);
+    }
+
+    /**
+     * Get the database representation of the notification.
+     */
+    public function toDatabase(object $notifiable): array
+    {
+        $senderUser = User::find($this->message->sender_user_id);
+
+        return [
+            'url' => route('messages.show', $this->message),
+            'message' => "Has recibido un nuevo mensaje de $senderUser->name",
+        ];
     }
 
     /**

@@ -27,13 +27,13 @@ class MessageController extends Controller
 
         $data['sender_user_id'] = auth()->user()->id;
 
-        Message::create($data);
+        $message = Message::create($data);
 
         $recipientUser = User::find($data['recipient_user_id']);
 
         $delay = now()->addSeconds(10);
 
-        $recipientUser->notify(new MessageSent($data)); // Enviar solo a un usuario especifico
+        $recipientUser->notify(new MessageSent($message)); // Enviar solo a un usuario especifico
 
         // Notification::send($recipientUser, new MessageSent()); // Enviar a todos los usuarios ejemplo: User::all() o $users
 
@@ -48,5 +48,10 @@ class MessageController extends Controller
         session()->flash('flash.banner', '¡Mensaje enviado!');
 
         return to_route('messages.create');
+    }
+
+    public function show(Message $message)
+    {
+        return $message;
     }
 }

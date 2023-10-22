@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+Route::get('/messages/{message}', [MessageController::class, 'show'])->name('messages.show');
 Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 
 Route::middleware([
