@@ -14,6 +14,15 @@ class Notifications extends Component
         auth()->user()->notifications->find($id)->markAsRead();
     }
 
+    /**
+     * Reset new notifications
+     */
+    public function resetNotification()
+    {
+        auth()->user()->notification = 0;
+        auth()->user()->save();
+    }
+
     public function render()
     {
         return view('livewire.notifications');

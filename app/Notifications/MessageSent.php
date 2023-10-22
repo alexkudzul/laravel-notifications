@@ -111,6 +111,14 @@ class MessageSent extends Notification implements ShouldQueue
      */
     public function toDatabase(object $notifiable): array
     {
+        /* - $notifiable: usuario que se va a notificar.
+            - Cuando se envie una notificacion incrementar el contador
+            notification de la tabla users.
+            - Campo que sera usado para mostrar notificaciones nuevas
+            en el navbar */
+        $notifiable->notification += 1;
+        $notifiable->save();
+
         $senderUser = User::find($this->message->sender_user_id);
 
         return [
