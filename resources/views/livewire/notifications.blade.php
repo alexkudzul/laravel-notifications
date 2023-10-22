@@ -14,19 +14,23 @@
         </x-slot>
 
         <x-slot name="content">
-            @forelse (auth()->user()->notifications as $notification)
-                <x-dropdown-link href="{{ route('profile.show') }}">
-                    {{ $notification->data['message'] }}
-                    <br>
-                    <span class="text-xs font-semibold">
-                        {{ $notification->created_at->diffForHumans() }}
-                    </span>
-                </x-dropdown-link>
-            @empty
-                <div class="px-4 py-2">
-                    No tienes notificaciones
-                </div>
-            @endforelse
+            <ul class="divide-y">
+                @forelse (auth()->user()->notifications as $notification)
+                    <li wire:click="readNotification('{{ $notification->id }}')" @class(['bg-gray-200' => !$notification->read_at])>
+                        <x-dropdown-link href="{{ $notification->data['url'] }}">
+                            {{ $notification->data['message'] }}
+                            <br>
+                            <span class="text-xs font-semibold">
+                                {{ $notification->created_at->diffForHumans() }}
+                            </span>
+                        </x-dropdown-link>
+                    </li>
+                @empty
+                    <li class="px-4 py-2">
+                        No tienes notificaciones
+                    </li>
+                @endforelse
+            </ul>
         </x-slot>
     </x-dropdown>
 </div>
