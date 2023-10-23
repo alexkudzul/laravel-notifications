@@ -8,6 +8,20 @@ class Notifications extends Component
 {
     public $amountNotificationsToShow = 3;
 
+
+    /**
+     * Listening Notifications with Laravel Echo and Livewire.
+     *
+     * Livewire V2: https://laravel-livewire.com/docs/2.x/laravel-echo
+     * Livewire V3: https://livewire.laravel.com/docs/events#real-time-events-using-laravel-echo
+     */
+    public function getListeners()
+    {
+        return [
+            'echo-notification:App.Models.User.' . auth()->user()->id . ',MessageSent' => 'render',
+        ];
+    }
+
     /**
      * Computed Property
      */
